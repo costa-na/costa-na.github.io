@@ -1,3 +1,19 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @costa-na
+ Watch 55
+  Star 1,574
+  Fork 1,180 poole/hyde
+ Code  Issues 16  Pull requests 30  Pulse  Graphs
+Branch: master Find file Copy pathhyde/index.html
+802cbd1  on Jun 24, 2014
+@mdo mdo baseurl, fixes #38
+1 contributor
+RawBlameHistory     37 lines (33 sloc)  947 Bytes
 ---
 layout: default
 title: Home
@@ -14,30 +30,26 @@ title: Home
 
     <span class="post-date">{{ post.date | date_to_string }}</span>
 
-    <div class="post-content-truncate">
-			{{ post.content | strip_html | truncatewords:50 }}
-		</div>
-			<br>
-		<div class="readmore">
-			<a href="{{ post.url }}">Seguir leyendo</a>
-		</div>
+    {{ post.content }}
   </div>
   {% endfor %}
 </div>
 
 <div class="pagination">
   {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">Entradas antiguas</a>
+    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">Older</a>
   {% else %}
-    <span class="pagination-item older">Entradas antiguas</span>
+    <span class="pagination-item older">Older</span>
   {% endif %}
   {% if paginator.previous_page %}
     {% if paginator.page == 2 %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}">Entradas recientes</a>
+      <a class="pagination-item newer" href="{{ site.baseurl }}">Newer</a>
     {% else %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">Entradas recientes</a>
+      <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">Newer</a>
     {% endif %}
   {% else %}
-    <span class="pagination-item newer">Entradas recientes</span>
+    <span class="pagination-item newer">Newer</span>
   {% endif %}
 </div>
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
