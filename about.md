@@ -1,29 +1,31 @@
 ---
 layout: page
-title: Sobre mi
-permalink: /sobre-mi/
+title: About
+permalink: /about/
 ---
 
-**Juan José Salvador**, Técnico de Sistemas Microinformáticos y Técnico Superior en Desarrollo de Aplicaciones Web. Especializado en desarrollo front-end y en framewoeks de JavaScript como Angular y Angular 2, y en desarrollo de aplicaciones híbridas para smartphones con Ionic e Ionic 2.
+<p class="message">
+  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
+</p>
 
-Actualmente trabajo como desarrollador en **Seyte SL**.
+In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
 
-### Desarrollo
-Desde muy pequeñito me gustaba trastear con ordenadores. Un día descubrí los libro-juegos en BASIC y mi mundo cambió totalmente. Lo que empezó como una llamada de curiosidad se convirtió en afición y con el tiempo, en una forma de ganarme la vida.
+There are currently two themes built on Poole:
 
-### Debian
-Usuario de GNU/Linux desde 2009 y de Debian desde que me atreví a dar el paso en 2013. Publico artículos técnicos en un blog de tecnología y GNU/Linux y paso mis ratos libres pululando por los foros ofreciendo soporte.
+* [Hyde](http://hyde.getpoole.com)
+* [Lanyon](http://lanyon.getpoole.com)
 
-### Sofware libre
-Considero que el conocimiento debe ser libre, y liberar el software es una forma de ayudar a conseguirlo.
+Learn more and contribute on [GitHub](https://github.com/poole).
 
-### Contacto
-Puedes encontrarme en las redes sociales o en mi correo electrónico.
+## Setup
 
-[@Linuxneitor](http://twitter.com/Linuxneitor)
+Some fun facts about the setup of this project include:
 
-[GitHub](http://www.github.com/JuanjoSalvador)
+* Built for [Jekyll](http://jekyllrb.com)
+* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
+* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
+* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
 
-[Google+](https://plus.google.com/u/0/+JuanjoSalvador)
+Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
 
-contacto@juanjosalvador.es
+Thanks for reading!
