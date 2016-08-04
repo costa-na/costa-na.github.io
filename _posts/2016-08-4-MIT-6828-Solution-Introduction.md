@@ -21,6 +21,5 @@ title: MIT 6.828课程解析（一） 简介
 
 为了掌握这些概念，6.828由三部分组成：讲义（lectures）、阅读（readings）以及一个大型试验（a major lab）。讲义和阅读是为了让你熟悉主要的概念。试验迫使你深层次的理解这些概念，因为你将从零开始会构建一个操作系统。在试验之后，你将领会到诸如“降低复杂度”和“概念完整性”等设计目标的意义。
 
-The lectures are organized in two main blocks. The first block introduces one operating system, xv6 (x86 version 6), which is a re-implementation of Unix Version 6, which was developed in the 1970s. In each lecture we will take one part of xv6 and study its source code; homework assignments will help you prepare for these lectures. At the end of the first block (about half-way the term), you will understand the source code for one well-designed operating system for an Intel-based PC, which help you building your own operating system.
 lectures由两个主要的部分组成。第一个部分介绍了一个操作系统，xv6（x86 version 6），一个开发于20世纪70年代的Unix version 6的重新实现。在每个lecture中，我们将会针对xv6的其中一个部分，学习它的源代码；布置的homwork将会辅助你准备这些lectures。在这部分的结尾（大于到一半的样子），你将会理解一个基于Intel PC的良好设计的操作系统的源代码，这将会帮助你构建你自己的操作系统。
 
