@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MIT 6.828 课程解析系列（一）
+title: Copiar archivos por SSH
 categories: 6.828
 ---
 
