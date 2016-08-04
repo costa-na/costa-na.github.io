@@ -13,7 +13,7 @@ title: MIT 6.828课程解析（一） 简介
 * 线程（[threads](https://en.wikipedia.org/wiki/Thread_(computing))）
 * 上下文切换（[context switches](https://en.wikipedia.org/wiki/Context_switch)）
 * 中断（[interrupts](https://en.wikipedia.org/wiki/Interrupt)）
-* 进程间通信（(interprocess communication](https://en.wikipedia.org/wiki/Inter-process_communication)）
+* 进程间通信（[interprocess communication](https://en.wikipedia.org/wiki/Inter-process_communication)）
 * 并发的协调（coordination of concurrent activities）
 * 软硬件接口（the interface between software and hardware）
 
