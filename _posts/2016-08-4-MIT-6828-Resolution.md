@@ -4,6 +4,6 @@ title: Copiar archivos por SSH
 categories: 6.828
 ---
 
-# 简介
+# Introduction
 
 
