@@ -20,14 +20,14 @@ sh.c只是一个普通的c代码文件，其入口函数和其他c代码一样�
 ### `main`
 ![main](/public/img/main_code.png)
 
-sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到`EOF`），然后就调用`exit(0)`结束自身进程。其流程图如下：
+sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到[`EOF`](https://en.wikipedia.org/wiki/End-of-file)），然后就调用[`exit(0)`](http://pubs.opengroup.org/onlinepubs/009695399/functions/exit.html)结束自身进程。其流程图如下：
 
 ![main](/public/img/main.png)
 
 要点：
 
 1. 命令缓存是由`main`在静态分配内存中分配的一个100字节的char型数组（[What does “static” mean in a C program?](http://stackoverflow.com/questions/572547/what-does-static-mean-in-a-c-program)）
-2. 如果读取命令成功，`main`会在调用`fork1`之前判断用户输入的命令是否为cd。为何要在父进程（`main`自身）而不是在执行命令的子进程中来判断，是因为cd命令会改变当前进程的工作目录（[Working directory](https://en.wikipedia.org/wiki/Working_directory)），从而改变后续命令的执行环境，所以需要在父进程中处理cd命令
+2. 如果读取命令成功，`main`会在调用`fork1`之前判断用户输入的命令是否为[cd](http://pubs.opengroup.org/onlinepubs/009696699/utilities/cd.html)。为何要在父进程（`main`自身）而不是在执行命令的子进程中来判断，是因为cd命令会改变当前进程的工作目录（[Working directory](https://en.wikipedia.org/wiki/Working_directory)），从而改变后续命令的执行环境，所以需要在父进程中处理cd命令
 3. `main`对cd处理得不是很好，这里存在一个隐藏的bug，如果在用户输入的命令之后存在空格，如“cd /bin  ”，[`chdir`](http://pubs.opengroup.org/onlinepubs/009695399/functions/chdir.html)将执行失败，因此这里需要将命令结尾处的空白字符strip掉
 4. `main`在调用`fork1`之后会使用[`wait`](http://pubs.opengroup.org/onlinepubs/009695399/functions/wait.html)来等待子进程执行结束，所以改变此处逻辑，让`main`分发下子进程后，不等待立即返回，可以使sh.c支持后台执行（这个是该homework的challenge之一）
 5. `main`并没有直接调用`fgets`来获取用户输入，而是将`fgets`封装在了`getcmd`中，这样可以在读取用户输入之前，更改输出的提示符
@@ -57,7 +57,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 4. 判断命令行是否已经解析完毕，如果还有剩余的字符，打印错误信息，结束进程
 5. 将`cmd`返回给`runcmd`
 
-到这里我们大致了解了`parsecmd`在做什么：解析命令字符串，将其转换为一个`cmd`结构，然后交给`runcmd`执行。现在暂时停止对各子函数的功能的深入分析，先让我们了解一下几个工具函数的实现，这样在后面遇到的时候就不用再去查看了。
+到这里我们大致了解了`parsecmd`在做什么：解析命令字符串，将其转换为一个`cmd`结构，然后交给`runcmd`执行。现在先让我们了解一下几个工具函数的实现，这样在后面遇到的时候就不用再去查看了。
 
 ### `peek`
 `peek`函数的第一个参数是一个二重char指针（`char **`），而我们是将一个指向命令字符串起始位置的指针的**地址**（`&s`），作为第一个参数传给`peek`，因此该参数即是输入参数，也是输出参数，在`peek`处理完成之后，`s`应指向字符串其他位置。
@@ -94,7 +94,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
     }
 ```
 
-因此，`ret`的值只能是固定的几种，要么是`'0'`、`'|'`、`'<'`、`'>'`，要么是`'a'`，而`ret`的值是根据`*s`的值来决定的，可以概括如下：如果`s`指向一个普通字符（除了`'0'`、`'|'`、`'<'`、`'>'`之外的任何字符），`gettoken`返回`'a'`，否则返回指向的这个特殊字符。
+因此，`ret`的值只能是固定的几种，要么是`'0'`、`'|'`、`'<'`、`'>'`，要么是`'a'`，而`ret`的值是根据`*s`的值来决定的，可以概括如下：如果`s`指向一个普通字符（因为之前已经使用`while`循环去掉了空白符，所以这里的普通字符应该是除了空白符、`'0'`、`'|'`、`'<'`、`'>'`之外的任何字符），`gettoken`返回`'a'`，否则返回指向的这个特殊字符。
 
 然后，再让我们来看看`gettoken`被调用的情况。对`gettoken`调用存在于四个地方：
 
