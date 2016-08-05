@@ -7,7 +7,7 @@ title: MIT 6.828课程解析（一） 简介
 
 > 6.828 teaches the fundamentals of engineering operating systems. You will study, in detail, virtual memory, kernel and user mode, system calls, threads, context switches, interrupts, interprocess communication, coordination of concurrent activities, and the interface between software and hardware. Most importantly, you will study the interactions between these concepts, and how to manage the complexity introduced by the interactions.
 
-6.828讲授设计或实现操作系统的基础概念。你将会深入学习到以下概念：
+6.828讲授设计和实现操作系统的基础概念。你将会深入学习到以下概念：
 
 * 虚拟内存（[virtual memory](https://en.wikipedia.org/wiki/Virtual_memory)）
 * 内核态和用户态（[kernel and user mode](https://en.wikipedia.org/wiki/Protection_ring)）
