@@ -26,3 +26,13 @@ title: MIT 6.828课程解析（二） 学习资源汇总
   * [xv6手册](https://pdos.csail.mit.edu/6.828/2014/xv6.html)
   * [xv6代码](https://pdos.csail.mit.edu/6.828/2014/xv6.html)
 * [引用资料](https://pdos.csail.mit.edu/6.828/2014/reference.html)
+
+## OS课程
+* [Operating Systems: Three Easy Pieces](http://pages.cs.wisc.edu/~remzi/OSTEP/)
+
+## 相关网站
+* [OSDEV](http://wiki.osdev.org/Main_Page)
+* [Interrupt Jump Table](http://www.ctyme.com/intr/int.htm)
+* [内存管理内幕](https://www.ibm.com/developerworks/cn/linux/l-memory/)
+* [A20](https://www.win.tue.nl/~aeb/linux/kbd/A20.html)
+* 
