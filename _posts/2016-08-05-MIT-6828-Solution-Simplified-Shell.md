@@ -9,8 +9,8 @@ title: MIT 6.828课程解析（四） Lecture 1：sh.c分析
 sh.c这个文件实现了一个简化版的shell，其默认提供了大部分框架代码，需要手动补充的缺失的功能是：
 
 * 实现单条命令的执行
-* 实现重定向（redirect）
-* 实现管道（pipe）
+* 实现重定向（[redirection](https://www.wikiwand.com/en/Redirection_(computing))）
+* 实现管道（[pipe](https://www.wikiwand.com/en/Pipeline_(Unix))）
 
 在动手写代码之前，先让我们浏览一遍整个sh.c的框架，力图理解其总体结构。
 
