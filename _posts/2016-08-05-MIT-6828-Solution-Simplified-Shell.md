@@ -7,6 +7,7 @@ title: MIT 6.828课程解析（四） Lecture 1：sh.c分析
 补全[sh.c](https://pdos.csail.mit.edu/6.828/2014/homework/sh.c)缺失的功能是6.828第一个[homework](https://pdos.csail.mit.edu/6.828/2014/homework/xv6-shell.html)，其目标是通过实现shell的部分功能让学生熟悉Unix的系统调用接口和shell的使用。
 
 sh.c这个文件实现了一个简化版的shell，其默认提供了大部分框架代码，需要手动补充的缺失的功能是：
+
 * 实现单条命令的执行
 * 实现重定向（redirect）
 * 实现管道（pipe）
