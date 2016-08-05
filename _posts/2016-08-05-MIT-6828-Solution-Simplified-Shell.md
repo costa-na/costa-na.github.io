@@ -64,4 +64,28 @@ sh.c的`main`函数极其简单，在创建了一个命令读取的缓存之后�
 
 总结一下`peek`的功能：消除空白符，判断命令类型
 
-### 
+### `gettoken`
+该函数较为复杂，我们一步一步来看。
+首先，先来看返回值`ret`。函数中对`ret`赋值的地方有两处`ret = *s`和`ret = 'a'`，注意观察到在`ret = *s`之后有一个`switch`逻辑：
+
+```
+    ret = *s;
+    switch (*s) {
+        case 0:
+            break;
+        case '|':
+        case '<':
+            s++;
+            break;
+        case '>':
+            s++;
+            break;
+        default:
+            ret = 'a';
+            while (s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
+            s++;
+            break;
+    }
+```
+
+因此，`ret`的值只能是固定的几种，要么是`0`、`|`、`<`、`>`，要么是`a`
