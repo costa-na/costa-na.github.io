@@ -27,7 +27,7 @@ title: MIT 6.828课程解析（一） 简介
 
 > The lectures are organized in two main blocks. The first block introduces one operating system, xv6 (x86 version 6), which is a re-implementation of Unix Version 6, which was developed in the 1970s. In each lecture we will take one part of xv6 and study its source code; homework assignments will help you prepare for these lectures. At the end of the first block (about half-way the term), you will understand the source code for one well-designed operating system for an Intel-based PC, which help you building your own operating system.
 
-lecture由两个主要的部分组成。第一个部分介绍了一个操作系统，xv6（x86 version 6），一个开发于20世纪70年代的Unix version 6的重新实现。在每个lecture中，我们将会针对xv6的其中一个部分，学习它的源代码；布置的homwork将会辅助你准备这些lectures。在这部分的结尾（大于到一半的样子），你将会理解一个基于Intel PC的良好设计的操作系统的源代码，这将会帮助你构建你自己的操作系统。
+lecture由两个主要的部分组成。第一个部分介绍了一个操作系统，[x8](https://pdos.csail.mit.edu/6.828/2014/xv6.html)（6 version 6），一个开发于20世纪70年代的Unix version 6的重新实现。在每个lecture中，我们将会针对xv6的其中一个部分，学习它的源代码；布置的homwork将会辅助你准备这些lectures。在这部分的结尾（大于到一半的样子），你将会理解一个基于Intel PC的良好设计的操作系统的源代码，这将会帮助你构建你自己的操作系统。
 
 > The second block of lectures covers important operating systems concepts invented after Unix v6. We will study the more modern concepts by reading research papers and discussing them in lecture. You will also implement some of these newer concepts in your operating system.
 
