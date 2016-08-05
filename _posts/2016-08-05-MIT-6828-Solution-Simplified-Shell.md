@@ -13,6 +13,7 @@ sh.c这个文件实现一个简化版的shell，其默认提供了大部分框�
 
 在动手写代码之前，让我们先浏览一遍整个sh.c的框架，力图理解其完整的调用流程。
 
+
 ## 分析
 sh.c只是一个普通的c代码文件，其入口函数和其他c代码一样，都是`main`函数，所以让我们先从`main`函数开始，作为整个分析的入口点
 
@@ -22,6 +23,7 @@ sh.c的`main`函数极其简单，在创建了一个命令读取的缓存之后�
 ![main](/public/img/main.png)
 
 要点：
+
 * 命令缓存是由`main`在静态分配内存中开辟的一个100字节的char型数组（[What does “static” mean in a C program?](http://stackoverflow.com/questions/572547/what-does-static-mean-in-a-c-program)）
 * 如果读取命令成功，`main`会在调用`fork`之前判断用户输入的命令是否为cd，为何要在父进程（`main`自身）而不是在执行命令的子进程中来判断，是因为cd命令会改变当前进程的工作目录（[Working directory](https://en.wikipedia.org/wiki/Working_directory)），从而改变后续命令的执行环境，所以需要在父进程中执行cd
 * `main`对cd的处理写得不是很好，这里存在一个隐藏的bug，如果在用户输入的命令之后存在空格，如|cd /bin  |，`chdir`将执行失败，因此这里需要将命令结尾处的空白字符strip掉
