@@ -33,6 +33,7 @@ sh.c的`main`函数极其简单，在创建了一个命令读取的缓存之后�
 5. `main`并没有直接调用`fgets`来获取用户输入，而是将`fget`封装在了`getcmd`中，这样可以在读取用户输入之前，更改输出的提示符
 
 ### `getcmd`
+![main](/public/img/getcmd_code.png)
 `getcmd`只是简单封装了`fgets`，其主要功能是：
 
 1. 判断`stdin`是否为终端设备，是就输出提示符“6.828$ ”，如果要将shell的提示符更改为其他形式就可以修改此处
