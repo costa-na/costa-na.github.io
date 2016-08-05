@@ -20,7 +20,7 @@ sh.c只是一个普通的c代码文件，其入口函数和其他c代码一样�
 ### `main`
 ![main](/public/img/main_code.png)
 
-sh.c的`main`函数极其简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到`EOF`），然后就调用`exit(0)`结束自身进程。其流程图如下：
+sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到`EOF`），然后就调用`exit(0)`结束自身进程。其流程图如下：
 
 ![main](/public/img/main.png)
 
@@ -39,12 +39,12 @@ sh.c的`main`函数极其简单，在创建了一个命令读取的缓存之后�
 
 1. 判断`stdin`是否为终端设备（terminal），如果是，就输出提示符“6.828$ ”。想要将shell的提示符更改为其他形式就可以修改此处
 2. 使用`memset`清空命令缓存数组`buf`
-3. 调用`fgets`从`stdin`读取一行用户输入（以回车符`\n`结束），将其存到`buf`中，这里需要参考`fgets`这个函数的说明文档（[fgets](http://pubs.opengroup.org/onlinepubs/009695399/functions/fgets.html)）
+3. 调用[`fgets`](http://pubs.opengroup.org/onlinepubs/009695399/functions/fgets.html)从`stdin`读取一行用户输入（以回车符`\n`结束），将其存到`buf`中
   * **注意**：`fgets`读取的最大字符数比第二个参数指定个数的要少一个，这是因为要在最后一个位置上填上`NULL`表示字符串的结束
 4. 判断读取是否成功，成功返回0，读取失败（读到`EOF`）返回-1，这个是Unix的惯用法（成功返回0，失败返回-1）
 
 ### `fork1`
-`fork1`封装了`fork`，这样在`fork`执行失败（返回-1）的时候，可以调用`perror`打印错误信息，便于使用和调试
+`fork1`封装了[`fork`](http://pubs.opengroup.org/onlinepubs/009695399/functions/fork.html)，这样在`fork`执行失败（返回-1）的时候，可以调用`perror`打印错误信息，便于使用和调试
 
 至此`main`的主体逻辑已经分析完毕，接下来分析命令的解析和具体执行逻辑，这部分占了sh.c的大部分代码。
 
