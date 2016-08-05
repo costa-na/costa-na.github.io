@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MIT 6.828课程解析（二） Lecture 1: sh.c分析
+title: MIT 6.828课程解析（三） Lecture 1：sh.c分析
 ---
 
 ## 简介
