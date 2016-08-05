@@ -62,7 +62,7 @@ lecture的第二部分覆盖了在Unix v6之后出现的重要的操作系统概
 3. 用户环境（[User environments](https://pdos.csail.mit.edu/6.828/2014/labs/lab3/)）
 4. 抢占式多任务（[Preemptive multitasking](https://pdos.csail.mit.edu/6.828/2014/labs/lab4/)）
 5. 文件系统、spawn和shell（[File system, spawn, and shell](https://pdos.csail.mit.edu/6.828/2014/labs/lab5/)）
-6. 网络驱动（Network driver）
+6. 网络驱动（[Network driver](https://pdos.csail.mit.edu/6.828/2014/labs/lab6/)）
 7. 开放式项目（[Open-ended project](https://pdos.csail.mit.edu/6.828/2014/labs/lab7/)）
 
 > We will provide skeleton code for pieces of JOS, but you will have to do all the hard work. You'll have design freedom for the details of the first few assignments, and freedom over the whole design in the last assignments. You'll find that xv6 helps you understand many of the goals you're trying to achieve in JOS, but that JOS occupies a very different point in the design and implementation space from xv6.
