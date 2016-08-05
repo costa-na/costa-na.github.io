@@ -30,9 +30,17 @@ title: MIT 6.828课程解析（二） 学习资源汇总
 ## OS课程
 * [Operating Systems: Three Easy Pieces](http://pages.cs.wisc.edu/~remzi/OSTEP/)
 
+## 小型和教育型操作系统
+* [Minix3](http://www.minix3.org/)
+* [Linux 0.11&0.12](http://oldlinux.org/index_cn.html)
+* [uclinux](http://www.uclinux.org/)
+
 ## 相关网站
 * [OSDEV](http://wiki.osdev.org/Main_Page)
 * [Interrupt Jump Table](http://www.ctyme.com/intr/int.htm)
 * [内存管理内幕](https://www.ibm.com/developerworks/cn/linux/l-memory/)
 * [A20](https://www.win.tue.nl/~aeb/linux/kbd/A20.html)
-* 
+
+## Markdown相关
+* [Markdown 语法说明](http://wowubuntu.com/markdown/)
+* [stackedit.io](https://stackedit.io/editor)
