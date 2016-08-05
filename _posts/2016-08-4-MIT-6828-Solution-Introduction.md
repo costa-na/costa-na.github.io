@@ -46,6 +46,7 @@ lecture的第二部分覆盖了在Unix v6之后出现的重要的操作系统概
 实验被分为6个主要部分，每个部分分开构建，到最后你会得到一个原生的操作系统，你可以在你自己写的shell里面运行简单的命令。我们遗留了最后的lecture，让你可以向班上其他的同学展示你的操作系统。
 
 > The operating system you will build, called JOS, will have Unix-like functions (e.g., fork, exec), but is implemented in an exokernel style (i.e., the Unix functions are implemented mostly as user-level library instead of built-in to the kernel). The major parts of the JOS operating system are:
+
 1. Booting
 2. Memory management
 3. User environments
@@ -55,6 +56,7 @@ lecture的第二部分覆盖了在Unix v6之后出现的重要的操作系统概
 7. Open-ended project
 
 你构建的操作系统叫做JOS，其具有Unix-like功能（比如fork、exec），但是采用exokernel的方式实现的（绝大多数Unix功能实现为用户模式的库，而不是内置到内核中）。JOS操作系统的主要部分有：
+
 1. 启动（Booting）
 2. 内存管理（Memory management）
 3. 用户环境（User environments）
