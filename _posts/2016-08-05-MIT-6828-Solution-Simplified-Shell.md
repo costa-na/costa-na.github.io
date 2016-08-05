@@ -44,6 +44,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 4. 判断读取是否成功，成功返回0，读取失败（读到`EOF`）返回-1，这个是Unix的惯用法（成功返回0，失败返回-1）
 
 ### `fork1`
+![main](/public/img/fork1_code.png)
+
 `fork1`封装了[`fork`](http://pubs.opengroup.org/onlinepubs/009695399/functions/fork.html)，这样在`fork`执行失败（返回-1）的时候，可以调用[`perror`](http://pubs.opengroup.org/onlinepubs/009695399/functions/perror.html)打印错误信息，便于使用和调试
 
 至此`main`的主体逻辑已经分析完毕，接下来分析命令的解析和具体执行逻辑，这部分占了sh.c的大部分代码。
