@@ -51,7 +51,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 
 至此`main`的主体逻辑已经分析完毕，接下来分析命令的解析和具体执行逻辑，这部分占了sh.c的大部分代码。
 
-### `parsecmd`预览
+### `parsecmd`分析 1
 `parsecmd`从名字上可以推断，该函数主要执行对用户输入的命令字符串的解析，`parsecmd`主体逻辑并不复杂，但此时我们只需要概括的看一下它的执行流程，并不会深入到每个子函数中去。
 
 1. 通过[`strlen`](http://pubs.opengroup.org/onlinepubs/009695399/functions/strlen.html)定位到命令字符串结尾后面的第一个位置上
@@ -136,5 +136,9 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 ### `parseline`
 `parseline`只有三条语句，仅仅是调用了`parsepipe`，然后将`parsepipe`的返回值再返回给调用者。
 
-### `parsepipe`
+### `parsepipe`分析 1
+从名字上看，`parsepipe`主要作用是解析`pipe`类型的命令，比如`ls | cat`，或者`ls | sort | cat`。其第一条语句调用了`parseexec`，所以这里我们先放下`parsepipe`，先来看看`parseexec`做了什么。
+
+### `parseexec`分析 1
+大致浏览一下`parseexec`的整体结构，可以看到在`parseecec`和在sh.c开头申明的几种命令结构类型`cmd`、`execcmd`、`redircmd`以及`pipecmd`有联系。因此，我们需要先看一下这三种结构的定义和对应的函数，之后再回来分析`parseecec`。
 
