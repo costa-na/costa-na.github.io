@@ -122,7 +122,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 因此，`peek`的作用如下：
 
 1. 使用`while`循环去掉命令前面的空白字符，这里的空白字符包括`' '`、`'\t'`、`'\r'`、`'\n'`和`'\v'`，这里使用了一个字符串函数[`strchr`](http://pubs.opengroup.org/onlinepubs/009695399/functions/strchr.html)来简化了判断代码
-2. 判断当前字符串起始字符是否是于输入的字符串（第三个参数，`toks`）其中任何一个字符，比如输入`"<>"`，判断该字符是否为`'<'`或`'>'`。这里用于判断该命令的类型（是单独的命令，还是redirect，还是pipe）
+2. 判断当前字符串起始字符是否是于输入的字符串（第三个参数，`toks`）其中任何一个字符，比如输入`"<>"`，判断该字符是否为`'<'`或`'>'`。这里用于判断该命令的类型（是可执行的命令，还是redirect，还是pipe）
 
 总结一下`peek`的功能：消除空白符，判断命令类型。
 
@@ -188,16 +188,16 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 
 `parseexec`声明了一对`char`指针`q`和`eq`，用于获取从命令行解析到的token，声明了一个`execcmd`指针`cmd`，用于指向分配的`execcmd`结构，还声明了一个`cmd`指针`ret`，用于返回。该函数具体执行流程为：
 
-1. 调用`execcmd()`分配一个`execcmd`结构，用于存放独立命令和其参数
+1. 调用`execcmd()`分配一个`execcmd`结构，用于存放可执行命令和其参数
 2. 将代表命令参数个数的变量`argc`初始化为0
-3. 调用`parseredirs`，解析重定向命令。为何要在解析独立命令之前就先解析redir命令，是因为Unix的shell支持直接在命令行上使用`< file`或者`> file`这样的命令将`file`中的内容输出到`stdout`，或将`stdin`得到的输入输出到`file`。
+3. 调用`parseredirs`，解析重定向命令。为何要在解析可执行命令之前就先解析redir命令，是因为Unix的shell支持直接在命令行上使用`< file`或者`> file`这样的命令将`file`中的内容输出到`stdout`，或将`stdin`得到的输入输出到`file`。
 4. 循环调用`peek`，确定只解析pipe符（`'|'`）之前的命令（如果是pipe命令的话）
 5. 在循环中，先调用`gettoken`获取到一个token
 6. 如果得到的token是空字符（`gettoken`返回0），跳出循环
 7. 如果得到的token不是普通字符（`gettoken`返回不是`'a'`），打印错误信息，结束进程。这是为了处理如`$ | cat`这样的错误语法
 8. 调用`mkcopy`为获取到的token分配存储空间，然后使用`argv[argc]`将当前`mkcopy`返回的地址放进`argv`中空闲的槽中，移动`argc`使其指向`argv`下一个空闲的槽
 9. 判断`argc`是否超过设定的最大值，如果超过，打印错误信息，结束进程
-10. 调用`parseredirs`解析独立命令之后的redir命令
+10. 调用`parseredirs`解析可执行命令之后的redir命令
 11. 结束循环，返回完成解析后的`execcmd`结构
 
 `parseexec`完成了大部分的解析工作，其对redir命令的解析是通过`parseredirs`完成的，因为我们接下来需要看看`parseredirs`函数的流程。
@@ -213,7 +213,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 4. 根据获取到的重定向符，使用`redircmd()`构造不同的`redircmd`结构
 5. 返回构造好的`redircmd`结构
 
-至此，我们已经了解了sh.c是如何解析独立命令和redir命令了，我们可以返回到`parseline`，看看是如何解析pipe命令的
+至此，我们已经了解了sh.c是如何解析可执行命令和redir命令了，我们可以返回到`parseline`，看看是如何解析pipe命令的
 
 ### `parsepipe`分析 2
 只要弄懂了`parseexec`命令，对`parsepipe`的命令分析就变得非常简单，其流程如下：
