@@ -219,3 +219,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
         3. 右子命令：`cat`
  
 这里还可以用树的形式来表示：
+
+![main](/public/img/pipecmd.png)
+
+所以，`parsepipe`使用了递归的方式来构造`pipecmd`结果，这也导致了在`runcmd`中采用了递归的形式来执行`pipecmd`
