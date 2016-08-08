@@ -45,15 +45,23 @@ padding within a structure object, but not at its beginning.
 由于这四种类型的第一个字段都是`int type`，利用上面提到的C语言中指向结构的指针的特性，就可以在指向这四种结构体的指针之间作任意的转换。
 
 ### `execcmd`
+![execcmd](/public/img/6.828/homework/1/execcmd_func_code.png)
+
 `execcmd`函数分配一个`execcmd`类型的结构，将其内存布局初始化为`0`，填写其`type`字段，然后将其地址转换为`cmd`指针并返回。
 
 ### `redircmd`
+![redircmd](/public/img/6.828/homework/1/redircmd_func_code.png)
+
 `redircmd`函数分配一个`redircmd`类型的结构，将其内存布局初始化为`0`，根据输入的参数填写结构对应的字段，如：类型（`type`）、需要运行的命令（`cmd`）、输入/输出文件（`file`）、打开模式（`mode`）和打开的文件描述符（`fd`），然后将其地址转换为`cmd`指针并返回。
 
 ### `pipecmd`
+![pipecmd](/public/img/6.828/homework/1/pipecmd_func_code.png)
+
 `redircmd`函数分配一个`redircmd`类型的结构，将其内存布局初始化为`0`，根据输入的参数填写结构对应的字段：类型（`type`）、`'|'`左边的子命令（`left`）和`'|'`右边的子命令（`right`），然后将其地址转换为`cmd`指针并返回。
 
-### `makecopy`
+### `mkcopy`
+![mkcopy](/public/img/6.828/homework/1/mkcopy_code.png)
+
 这个函数很简单，就只是将输入的由`s`和`es`指定的字符串复制了一份，在末尾加上了字符串结尾的`0`，然后就将其返回了。
 
 ## 函数
@@ -93,6 +101,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 至此`main`的主体逻辑已经分析完毕，接下来分析命令的解析和具体执行逻辑，这部分占了sh.c的大部分代码。
 
 ### `parsecmd`分析 1
+![parsecmd](/public/img/6.828/homework/1/parsecmd_code.png)
+
 `parsecmd`从名字上可以推断，该函数主要执行对用户输入的命令字符串的解析，`parsecmd`主体逻辑并不复杂，但此时我们只需要概括的看一下它的执行流程，并不会深入到每个子函数中去。
 
 1. 通过[`strlen`](http://pubs.opengroup.org/onlinepubs/009695399/functions/strlen.html)定位到命令字符串结尾后面的第一个位置上
@@ -104,6 +114,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 到这里我们大致了解了`parsecmd`在做什么：解析命令字符串，将其转换为一个`cmd`结构，然后交给`runcmd`执行。现在先让我们了解一下几个工具函数的实现，这样在后面遇到的时候就不用再去查看了。
 
 ### `peek`
+![peek](/public/img/6.828/homework/1/peek_code.png)
+
 `peek`函数的第一个参数是一个二重char指针（`char **`），而我们是将一个指向命令字符串起始位置的指针的**地址**（`&s`），作为第一个参数传给`peek`，因此该参数即是输入参数，也是输出参数，在`peek`处理完成之后，`s`应指向字符串其他位置。
 `peek`函数的第二个参数可以参考`parsecmd`中对`peek`的调用。在`parsecmd`中，调用`peek`的第二个参数是指向`s`指向的字符串结尾后面的第一个位置的指针。
 
@@ -115,6 +127,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 总结一下`peek`的功能：消除空白符，判断命令类型。
 
 ### `gettoken`
+![gettoken](/public/img/6.828/homework/1/gettoken_code.png)
+
 该函数较为复杂，我们一步一步来看。
 首先，先来看返回值`ret`。函数中对`ret`赋值的地方有两处`ret = *s`和`ret = 'a'`，注意观察到在`ret = *s`之后有一个`switch`逻辑：
 
@@ -160,12 +174,18 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 现在我们可以回到`parsecmd`，继续分析其调用的各个子函数了。
 
 ### `parseline`
+![parseline](/public/img/6.828/homework/1/parseline_code.png)
+
 `parseline`只有三条语句，仅仅是调用了`parsepipe`，然后将`parsepipe`的返回值再返回给调用者。
 
 ### `parsepipe`分析 1
+![parsepipe](/public/img/6.828/homework/1/parsepipe_code.png)
+
 从名字上看，`parsepipe`主要作用是解析pipe类型的命令，比如`ls | cat`，或者`ls | sort | cat`。其第一条语句调用了`parseexec`，所以这里我们先放下`parsepipe`，先来看看`parseexec`做了什么。
 
 ### `parseexec`
+![parseexec](/public/img/6.828/homework/1/parseexec_code.png)
+
 `parseexec`声明了一对`char`指针`q`和`eq`，用于获取从命令行解析到的token，声明了一个`execcmd`指针`cmd`，用于指向分配的`execcmd`结构，还声明了一个`cmd`指针`ret`，用于返回。该函数具体执行流程为：
 
 1. 调用`execcmd()`分配一个`execcmd`结构，用于存放独立命令和其参数
@@ -175,7 +195,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 5. 在循环中，先调用`gettoken`获取到一个token
 6. 如果得到的token是空字符（`gettoken`返回0），跳出循环
 7. 如果得到的token不是普通字符（`gettoken`返回不是`'a'`），打印错误信息，结束进程。这是为了处理如`$ | cat`这样的错误语法
-8. 调用`makecopy`为获取到的token分配存储空间，然后使用`argv[argc]`将当前`makecopy`返回的地址放进`argv`中空闲的槽中，移动`argc`使其指向`argv`下一个空闲的槽
+8. 调用`mkcopy`为获取到的token分配存储空间，然后使用`argv[argc]`将当前`mkcopy`返回的地址放进`argv`中空闲的槽中，移动`argc`使其指向`argv`下一个空闲的槽
 9. 判断`argc`是否超过设定的最大值，如果超过，打印错误信息，结束进程
 10. 调用`parseredirs`解析独立命令之后的redir命令
 11. 结束循环，返回完成解析后的`execcmd`结构
@@ -183,6 +203,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 `parseexec`完成了大部分的解析工作，其对redir命令的解析是通过`parseredirs`完成的，因为我们接下来需要看看`parseredirs`函数的流程。
 
 ### `parseredirs`
+![parseredirs](/public/img/6.828/homework/1/parseredirs_code.png)
+
 `parseredirs`使用了一个`while`循环来解析命令中出现的redir命令，其流程为：
 
 1. 如果存在`<`或`>`字符，进入解析循环
@@ -237,6 +259,8 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 现在我们已经完成了sh.c对命令解析的相关函数的分析，接下来我们来看看sh.c是如何执行的命令的，这只涉及到了一个函数`runcmd`。
 
 ### `runcmd`
+![runcmd](/public/img/6.828/homework/1/runcmd_code.png)
+
 `runcmd`主要由一个`switch`分支结构组成，其作用就是根据传入的`cmd`参数的`type`字段，针对不同类型的命令，采取不同的执行方式，这部分就是该Homework需要完成的，这部分的分析我们放在下一篇文章中来说明。
 
 
