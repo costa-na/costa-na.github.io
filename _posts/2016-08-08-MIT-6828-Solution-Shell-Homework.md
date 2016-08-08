@@ -150,5 +150,31 @@ The program calls pipe, which creates a new pipe and records the read and write 
 
 用于执行右子命令的子进程中实现重新绑定标准输入的文件描述符（`0`）的流程与以上描述的流程绝大部分相同。其不同之处在于：1. 对标准输入文件描述符的拷贝需要先使用`close(0)`，关闭标准输入文件描述符，再使用`dup(p[0])`，将标准输入绑定到pipe的读端（`p[0]`）；2. 对右子命令的执行是通过使用`pcmd->right`作为参数调用`runcmd`来实现的。
 
+现在用于执行子命令的子进程都已经创建好了，回到父进程也就是shell中，由于父进程和子进程共享相同的文件描述符，在父进程中也需要使用`close(p[0])`和`close(p[1])`来分别关闭对pipe读端和写端的引用，使得子进程不会block在空的pipe上。最后，父进程通过连续调用两次`wait`，来分别等待两个子进程的执行结束，因此，补全后的代码如下：
 
+```
+  case '|':
+    pcmd = (struct pipecmd*)cmd;
+    pipe(p);
+    if(fork1() == 0){
+      close(1);
+      dup(p[1]);
+      close(p[0]);
+      close(p[1]);
+      runcmd(pcmd->left);
+    }
 
+    if(fork1() == 0){
+      close(0);
+      dup(p[0]);
+      close(p[0]);
+      close(p[1]);
+      runcmd(pcmd->right);
+    }
+
+    close(p[0]);
+    close(p[1]);
+    wait();
+    wait();
+    break;
+```
