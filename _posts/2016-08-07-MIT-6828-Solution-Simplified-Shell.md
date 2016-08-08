@@ -19,9 +19,9 @@ sh.c这个文件实现了一个简化版的shell，其默认提供了大部分�
 ### 命令结构类型定义
 sh.c的功能是解析用户输入的命令并执行，由于命令类型可以分为：
 
-* 独立命令，如： `ls`，`echo "Hello, world!"`
-* 重定向命令，如：`ls > list`，`echo < in_file > out_file`
-* 管道命令，如：`ls | sort | cat`
+* 可执行命令，如： `ls`，`echo "Hello, world!"`
+* 包含重定向的命令，如：`ls > list`，`echo < in_file > out_file`
+* 包含管道的命令，如：`ls | sort | cat`
 
 为了将用户输入的命令转换为一种有序结构，以便于解析和执行，sh.c采用了一种常用的方法来模拟面向对象编程语言中的继承属性。
 
@@ -36,9 +36,9 @@ padding within a structure object, but not at its beginning.
 “指向结构体的指针可以转换为指向结构体内第一个成员变量的指针，反之亦然”。因此，我们可以定义不同的结构，只要保证其第一个成员变量类型一致，就可以在指向这几种的结构体的指针任意转换，这样就可以在一定程度上模拟面向对象的一些特性。sh.c就利用了此方法，其中定义了四种不同的cmd类型的结构，分别用以代表上面提到的三种命令类型，用`type`字段的不同值来作区分：
 
 * `struct cmd`，不代表实际命令，其作用相当于Java中的抽象基类
-* `struct execcmd`，代表独立命令，`type`字段为`' '`
-* `struct redircmd`，代表重定向命令，`type`字段为`'<'`或`'>'`
-* `struct pipecmd`，代表管道类型，`type`字段为`'|'`
+* `struct execcmd`，代表可执行命令，`type`字段为`' '`
+* `struct redircmd`，代表包含重定向的命令，`type`字段为`'<'`或`'>'`
+* `struct pipecmd`，代表包含管道的命令，`type`字段为`'|'`
 
 这里需要注意到，在`execcmd`的定义中，只有`type`类型字段和`argv`参数字符串数组，并没有存放命令的字段，这是因为在Unix惯例中，参数数组的第1个元素（`argv[0]`）即是需执行的命令的字符串，如执行`ls /bin`这个命令，shell调用ls时，传递给ls的参数数组`argv`的第一个元素就是字符串`"ls"`。所以并不需要独立的字段来存放具体的命令。
 
@@ -70,16 +70,16 @@ sh.c只是一个普通的c代码文件，其入口函数和其他c代码一样�
 ### `main`
 ![main](/public/img/6.828/homework/1/main_code.png)
 
-sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到[`EOF`](https://en.wikipedia.org/wiki/End-of-file)），然后就调用[`exit(0)`](http://pubs.opengroup.org/onlinepubs/009695399/functions/exit.html)结束自身进程。其流程图如下：
+sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存之后，就进入一个“读命令” > “执行命令” > “读下一条命令” > “执行” > ...的循环中，直到读取命令返回失败（读到[`EOF`](https://en.wikipedia.org/wiki/End-of-file)），然后就调用[`exit(0)`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/exit.html)结束自身进程。其流程图如下：
 
 ![main](/public/img/6.828/homework/1/main.png)
 
 要点：
 
 1. 命令缓存是由`main`在静态分配内存中分配的一个100字节的char型数组（[What does “static” mean in a C program?](http://stackoverflow.com/questions/572547/what-does-static-mean-in-a-c-program)）
-2. 如果读取命令成功，`main`会在调用`fork1`之前判断用户输入的命令是否为[cd](http://pubs.opengroup.org/onlinepubs/009696699/utilities/cd.html)。为何要在父进程（`main`自身）而不是在执行命令的子进程中来判断，是因为cd命令会改变当前进程的工作目录（[Working directory](https://en.wikipedia.org/wiki/Working_directory)），从而改变后续命令的执行环境，所以需要在父进程中处理cd命令
-3. `main`对cd处理得不是很好，这里存在一个隐藏的bug，如果在用户输入的命令之后存在空格，如“cd /bin  ”，[`chdir`](http://pubs.opengroup.org/onlinepubs/009695399/functions/chdir.html)将执行失败，因此这里需要将命令结尾处的空白字符strip掉
-4. `main`在调用`fork1`之后会使用[`wait`](http://pubs.opengroup.org/onlinepubs/009695399/functions/wait.html)来等待子进程执行结束，所以改变此处逻辑，让`main`分发下子进程后，不等待立即返回，可以使sh.c支持后台执行（这个是该homework的challenge之一）
+2. 如果读取命令成功，`main`会在调用`fork1`之前判断用户输入的命令是否为[cd](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cd.html)。为何要在父进程（`main`自身）而不是在执行命令的子进程中来判断，是因为cd命令会改变当前进程的工作目录（[Working directory](https://en.wikipedia.org/wiki/Working_directory)），从而改变后续命令的执行环境，所以需要在父进程中处理cd命令
+3. `main`对cd处理得不是很好，这里存在一个隐藏的bug，如果在用户输入的命令之后存在空格，如“cd /bin  ”，[`chdir`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html)将执行失败，因此这里需要将命令结尾处的空白字符strip掉
+4. `main`在调用`fork1`之后会使用[`wait`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html)来等待子进程执行结束，所以改变此处逻辑，让`main`分发下子进程后，不等待立即返回，可以使sh.c支持后台执行（这个是该homework的challenge之一）
 5. `main`并没有直接调用`fgets`来获取用户输入，而是将`fgets`封装在了`getcmd`中，这样可以在读取用户输入之前，更改输出的提示符
 
 ### `getcmd`
@@ -87,16 +87,16 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 
 `getcmd`只是简单封装了`fgets`，其主要功能是：
 
-1. 判断[`stdin`](http://pubs.opengroup.org/onlinepubs/009695399/functions/stdin.html)是否为终端设备（terminal），如果是，就输出提示符“6.828$ ”。想要将shell的提示符更改为其他形式就可以修改此处
-2. 使用[`memset`](http://pubs.opengroup.org/onlinepubs/009695399/functions/memset.html)清空命令缓存数组`buf`
-3. 调用[`fgets`](http://pubs.opengroup.org/onlinepubs/009695399/functions/fgets.html)从`stdin`读取一行用户输入（以回车符`\n`结束），将其存到`buf`中
+1. 判断[`stdin`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stdin.html)是否为终端设备（terminal），如果是，就输出提示符“6.828$ ”。想要将shell的提示符更改为其他形式就可以修改此处
+2. 使用[`memset`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/memset.html)清空命令缓存数组`buf`
+3. 调用[`fgets`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fgets.html)从`stdin`读取一行用户输入（以回车符`\n`结束），将其存到`buf`中
   * **注意**：`fgets`读取的最大字符数比第二个参数指定个数的要少一个，这是因为要在最后一个位置上填上`NULL`表示字符串的结束
 4. 判断读取是否成功，成功返回0，读取失败（读到`EOF`）返回-1，这个是Unix的惯用法（成功返回0，失败返回-1）
 
 ### `fork1`
 ![main](/public/img/6.828/homework/1/fork1_code.png)
 
-`fork1`封装了[`fork`](http://pubs.opengroup.org/onlinepubs/009695399/functions/fork.html)，这样在`fork`执行失败（返回-1）的时候，可以调用[`perror`](http://pubs.opengroup.org/onlinepubs/009695399/functions/perror.html)打印错误信息，便于使用和调试
+`fork1`封装了[`fork`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html)，这样在`fork`执行失败（返回-1）的时候，可以调用[`perror`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/perror.html)打印错误信息，便于使用和调试
 
 至此`main`的主体逻辑已经分析完毕，接下来分析命令的解析和具体执行逻辑，这部分占了sh.c的大部分代码。
 
@@ -105,7 +105,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 
 `parsecmd`从名字上可以推断，该函数主要执行对用户输入的命令字符串的解析，`parsecmd`主体逻辑并不复杂，但此时我们只需要概括的看一下它的执行流程，并不会深入到每个子函数中去。
 
-1. 通过[`strlen`](http://pubs.opengroup.org/onlinepubs/009695399/functions/strlen.html)定位到命令字符串结尾后面的第一个位置上
+1. 通过[`strlen`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/strlen.html)定位到命令字符串结尾后面的第一个位置上
 2. 将字符串的起始位置和结尾后面的第一个位置传给`parseline`，返回值赋给`struct cmd`类型的变量`cmd`
 3. 再将相同的参数连同一个空字串传给`peek`函数
 4. 判断命令行是否已经解析完毕，如果还有剩余的字符，打印错误信息，结束进程
@@ -121,7 +121,7 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 
 因此，`peek`的作用如下：
 
-1. 使用`while`循环去掉命令前面的空白字符，这里的空白字符包括`' '`、`'\t'`、`'\r'`、`'\n'`和`'\v'`，这里使用了一个字符串函数[`strchr`](http://pubs.opengroup.org/onlinepubs/009695399/functions/strchr.html)来简化了判断代码
+1. 使用`while`循环去掉命令前面的空白字符，这里的空白字符包括`' '`、`'\t'`、`'\r'`、`'\n'`和`'\v'`，这里使用了一个字符串函数[`strchr`](http://pubs.opengroup.org/onlinepubs/9699919799/functions/strchr.html)来简化了判断代码
 2. 判断当前字符串起始字符是否是于输入的字符串（第三个参数，`toks`）其中任何一个字符，比如输入`"<>"`，判断该字符是否为`'<'`或`'>'`。这里用于判断该命令的类型（是可执行的命令，还是redirect，还是pipe）
 
 总结一下`peek`的功能：消除空白符，判断命令类型。
