@@ -10,7 +10,7 @@ title: MIT 6.828课程解析（五） Lecture 1：sh.c功能补全
 
 ## 功能实现
 
-### 运行独立命令（`execcmd`）
+### 运行可执行命令（`execcmd`）
 上篇我们已经介绍了可执行命令（`execcmd`）、重定向命令（`redircmd`）和管道命令（`pipecmd`）的区别。其中，可执行命令是重定向命令和管道命令的基础，其实现也非常简单，所以让我们先来实现可执行命令的执行逻辑。
 
 在`runcmd`中，对于`execcmd`类型的命令的处理分支是这样的：
@@ -45,3 +45,61 @@ title: MIT 6.828课程解析（五） Lecture 1：sh.c功能补全
 ```
 
 在上篇我们已经说过，在`execcmd`的`argv`数组中存放的是命令的调用参数，其第一个元素存放的是命令自身的可执行文件的路径，所以这里我们将`ecmd->argv[0]`作为第一个参数传递给了`execv`。我们需要判断`execv`是否执行成功，如果执行失败了，就是使用[perror](http://pubs.opengroup.org/onlinepubs/009695399/functions/perror.html)打印错误信息，然后使用`exit(0)`结束进程。
+
+### 运行重定向命令（`redircmd`）
+在`runcmd`中，对于`execcmd`类型的命令的处理分支是这样的：
+
+```
+  case '>':
+  case '<':
+    rcmd = (struct redircmd*)cmd;
+    fprintf(stderr, "redir not implemented\n");
+    // Your code here ...
+    runcmd(rcmd->cmd);
+    break;
+```
+
+在xv6手册中已经提到了如何实现重定向命令的执行：
+
+> This behavior allows the shell to implement I/O redirection by forking, reopening chosen file descriptors, and then execing the new program. Here is a simplified version of the code a shell runs for the command `cat <input.txt`:
+```
+  char *argv[2];
+  argv[0] = "cat";
+  argv[1] = 0;
+  if(fork() == 0) {
+    close(0);
+    open("input.txt", O_RDONLY);
+    exec("cat", argv);
+  }
+```
+After the child closes file descriptor 0, `open` is guaranteed to use that file descriptor for the newly opened `input.txt`: 0 will be the smallest available file descriptor. `Cat` then executes with file descriptor 0 (standard input) referring to `input.txt`.
+
+这里需要知道[`close`](http://pubs.opengroup.org/onlinepubs/009695399/functions/close.html)关闭并回收一个文件描述符（`fd`），让其能够被之后的`open`调用使用：
+
+> The `close()` function shall deallocate the file descriptor indicated by `fildes`. To deallocate means to make the file descriptor available for return by subsequent calls to `open()` or other functions that allocate file descriptors. 
+
+然后还要知道[`open`](http://pubs.opengroup.org/onlinepubs/009695399/functions/open.html)是分配一个文件描述符（`fd`），并将其和指定的文件相关联。`open`分配的文件描述符是文件描述符表中最小的可用文件描述符：
+
+> The `open()` function shall return a file descriptor for the named file that is the lowest file descriptor not currently open for that process. 
+
+因为要重定向的文件描述符已经存在于`rcmd->fd`中，所以这里我们先使用`close(rcmd->fd)`关闭欲重定向的文件描述符，再使用`open(rcmd->file, ...)`打开。`open`的第二个参数指定打开文件的`mode`，这个值也已经存放在`rcmd->mode`中了，直接传递给`open`即可。当指定打开的文件不存在时，`open`会新建一个文件然后在尝试打开，其第三个参数即指定了新建文件的属性，这里我们使用了[`<sys/stat.h>`](http://pubs.opengroup.org/onlinepubs/7908799/xsh/sysstat.h.html)中的两个常量来指定：
+
+* `S_IRWXU`：ower具有读写和可执行权（read, write, execute/search by owner）
+* `S_IRGRP`:group具有可读权（read permission, group）
+* 
+因此，补全后的代码如下：
+
+```
+  case '>':
+  case '<':
+    rcmd = (struct redircmd*)cmd;
+    fprintf(stderr, "redir not implemented\n");
+    close(rcmd->fd);
+    if(open(rcmd->file, rcmd->mode, S_IRWXU|S_IRGRP) < 0){
+      perror("open");
+      exit(0);
+    }
+    runcmd(rcmd->cmd);
+```
+
+    break;
