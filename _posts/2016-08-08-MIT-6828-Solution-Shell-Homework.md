@@ -139,7 +139,7 @@ The program calls pipe, which creates a new pipe and records the read and write 
 
 > The `dup()` system call creates a copy of the file descriptor oldfd, using the lowest-numbered unused file descriptor for the new descriptor.
 
-对pipe命令的左子命令（`pcmd->left`）和右子命令（`pcmd->right`）的执行是通过调用`fork1`来创建新的子进程，并在新创建的子进程中递归调用`runcmd`来执行的。由于`fork1`的实质是对系统调用`fork`的封装，而由`fork`产生的子进程将会和父进程共享所有的内存数据，包括了在父进程中定义的变量（`p[0]`和`p[1]`），打开的文件描述符（`0`、`1`）。因此，对标准输入的文件描述符（`0`）和标准输出的文件描述符（`1`）的重新绑定的工作都是在新创建的子进程中来完成的。
+对pipe命令的左子命令（`pcmd->left`）和右子命令（`pcmd->right`）是通过调用`fork1`来创建新的子进程，并在新创建的子进程中递归调用`runcmd`来执行的。由于`fork1`的实质是对系统调用`fork`的封装，而由`fork`产生的子进程将会和父进程共享所有的父进程中的内存数据，包括了在父进程中定义的变量（`p[0]`和`p[1]`），打开的文件描述符（`0`、`1`）。因此，对标准输入的文件描述符（`0`）和标准输出的文件描述符（`1`）的重新绑定的工作都是在新创建的子进程中来完成的。
 
 在新实现重新绑定标准输出的文件描述符（`1`）的流程为：
 
