@@ -37,9 +37,9 @@ title: MIT 6.828课程解析（五） Lecture 1：sh.c功能补全
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit(0);
-    if(execv(ecmd->argv[0], ecmd->argv) < 0){
-      perror("execv");
-      exit(0);
+    if(execv(ecmd->argv[0], ecmd->argv) < 0){ // call execv to execute specified command
+      perror("execv");                        // print error message if execution is failed
+      exit(0);                                // terminate process
     }
     break;
 ```
@@ -93,8 +93,8 @@ After the child closes file descriptor 0, `open` is guaranteed to use that file 
   case '>':
   case '<':
     rcmd = (struct redircmd*)cmd;
-    close(rcmd->fd);
-    if(open(rcmd->file, rcmd->mode, S_IRWXU|S_IRGRP) < 0){
+    close(rcmd->fd);                                        // close file descriotion '0' or '1'
+    if(open(rcmd->file, rcmd->mode, S_IRWXU|S_IRGRP) < 0){  // opeon specified file, make fd '0' or '1' to refer to it 
       perror("open");
       exit(0);
     }
@@ -155,21 +155,21 @@ The program calls pipe, which creates a new pipe and records the read and write 
 ```
   case '|':
     pcmd = (struct pipecmd*)cmd;
-    pipe(p);
-    if(fork1() == 0){
-      close(1);
-      dup(p[1]);
+    pipe(p);                // call pipe to create two fd (p[0] and p[1]) to refer to read-end and write-end of pipe separately
+    if(fork1() == 0){       // call fork to create subprocess to execute left-subcommand
+      close(1);             // close fd to stdout('1')
+      dup(p[1]);            // make '1' and p[1] both refer to write-end of pipe
       close(p[0]);
       close(p[1]);
-      runcmd(pcmd->left);
+      runcmd(pcmd->left);   // call runcmd to run left-subcommand
     }
 
-    if(fork1() == 0){
-      close(0);
-      dup(p[0]);
+    if(fork1() == 0){       // call fork to create subprocess to execute right-subcommand
+      close(0);             // close fd to stdin('0')
+      dup(p[0]);            // make '0' and p[0] both refer to read-end of pipe
       close(p[0]);
       close(p[1]);
-      runcmd(pcmd->right);
+      runcmd(pcmd->right);  // call runcmd to run left-subcommand
     }
 
     close(p[0]);
