@@ -174,12 +174,12 @@ sh.c的`main`函数实现非常简单，在创建了一个命令读取的缓存�
 现在我们可以回到`parsecmd`，继续分析其调用的各个子函数了。
 
 ### `parseline`
-![parseline](/public/img/6.828/homework/1/parseline_code.png)
+![parseline](/public/img/6.828/homework/1/parseline_code_new.png)
 
 `parseline`只有三条语句，仅仅是调用了`parsepipe`，然后将`parsepipe`的返回值再返回给调用者。
 
 ### `parsepipe`分析 1
-![parsepipe](/public/img/6.828/homework/1/parsepipe_code.png)
+![parsepipe](/public/img/6.828/homework/1/parsepipe_code_new.png)
 
 从名字上看，`parsepipe`主要作用是解析pipe类型的命令，比如`ls | cat`，或者`ls | sort | cat`。其第一条语句调用了`parseexec`，所以这里我们先放下`parsepipe`，先来看看`parseexec`做了什么。
 
