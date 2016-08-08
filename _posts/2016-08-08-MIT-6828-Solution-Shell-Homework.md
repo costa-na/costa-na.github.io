@@ -145,12 +145,6 @@ The program calls pipe, which creates a new pipe and records the read and write 
 2. 使用`dup(p[1])`将文件描述符`1`复制为和`p[1]`的拷贝，此时，对`1`的写操作（`write`）的（也就是输出到标准输出）都和对`p[1]`的写操作相同
 3. 使用`close(p[0]`和`close(p[1])`关闭文件描述符`p[0]`和`p[1]`，这里需要注意到`pipe`的[两个特性](http://man7.org/linux/man-pages/man7/pipe.7.html)：
 
-    1. 如果一个进程尝试从一个空的pipe（empty pipe）中读取数据，`read`调用将导致该进程被block，如果一个进程尝试向一个满的pipe中（full pipe）中写数据，`write`调用将导致该进程被block：
-    
-> If a process attempts to read from an empty pipe, then `read(2)` will block until data is available.  If a process attempts to write to a full pipe (see below), then `write(2)` blocks until sufficient data has been read from the pipe to allow the write to complete.
-
+    1. 如果一个进程尝试从一个空的pipe（empty pipe）中读取数据，`read`调用将导致该进程被block，如果一个进程尝试向一个满的pipe中（full pipe）中写数据，`write`调用将导致该进程被block。
     2. 如果所有引用
-    
-> If all file descriptors referring to the write end of a pipe have been closed, then an attempt to read(2) from the pipe will see end-of-file (read(2) will return 0).  If all file descriptors referring to the read end of a pipe have been closed, then a write(2) will cause a SIGPIPE signal to be generated for the calling process.
 
-**[TBD]**
