@@ -144,7 +144,6 @@ The program calls pipe, which creates a new pipe and records the read and write 
 1. 使用`close(1)`关闭并回收标准输出的文件描述符（`1`），使其对后续的`dup`可用，该函数执行完成之后，文件描述符`1`已经不在和默认的标准输出（通常是终端）相联系了
 2. 使用`dup(p[1])`将文件描述符`1`复制为和`p[1]`的拷贝，此时，对`1`的写操作（`write`）的（也就是输出到标准输出）都和对`p[1]`的写操作相同
 3. 使用`close(p[0]`和`close(p[1])`关闭文件描述符`p[0]`和`p[1]`，这里需要注意到`pipe`的[两个特性](http://man7.org/linux/man-pages/man7/pipe.7.html)：
-
-    1. 如果一个进程尝试从一个空的pipe（empty pipe）中读取数据，`read`调用将导致该进程被block，如果一个进程尝试向一个满的pipe中（full pipe）中写数据，`write`调用将导致该进程被block。
-    2. 如果所有引用
+    1. 如果一个进程尝试从一个空的pipe（empty pipe）中读取数据，`read`调用将导致该进程被block；如果一个进程尝试向一个满的pipe中（full pipe）中写数据，`write`调用将导致该进程被block。
+    2. 如果所有与pipe的写端相关联的文件描述符都被关闭了的话，对pipe的读操作将会读到`EOF`；如果所有与pipe的读端相关联的文件描述符都被关闭了的话，对pipe的写操作将会收到由调用写操作的进程产生的`SIGPIPE`信号
 
